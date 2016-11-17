@@ -26,27 +26,47 @@ $(function() {
             expect(allFeeds.length).not.toBe(0);
         });
 
-
         /* TODO: Write a test that loops through each feed
          * in the allFeeds object and ensures it has a URL defined
          * and that the URL is not empty.
          */
 
 
+        it('Feed Urls defined', function() {
+            for (index in allFeeds) {
+                expect(allFeeds[index].url).toBeDefined();
+                expect(allFeeds[index].url).not.toBe(0);
+            };
+        });
+
         /* TODO: Write a test that loops through each feed
          * in the allFeeds object and ensures it has a name defined
          * and that the name is not empty.
          */
+
+        it('Feed names defined', function() {
+            for (index in allFeeds) {
+                expect(allFeeds[index].name).toBeDefined();
+                expect(allFeeds[index].name).not.toBe(0);
+            }
+        });
+
+
     });
 
 
     /* TODO: Write a new test suite named "The menu" */
 
+    describe('Menu', function() {
         /* TODO: Write a test that ensures the menu element is
          * hidden by default. You'll have to analyze the HTML and
          * the CSS to determine how we're performing the
          * hiding/showing of the menu element.
          */
+         it('Menu hidden by default', function() {
+            var slideMenuStatus = $('body').hasClass('menu-hidden');
+            expect(slideMenuStatus).toBeTruthy();
+         });
 
          /* TODO: Write a test that ensures the menu changes
           * visibility when the menu icon is clicked. This test
@@ -54,19 +74,77 @@ $(function() {
           * clicked and does it hide when clicked again.
           */
 
-    /* TODO: Write a new test suite named "Initial Entries" */
+          it('Menu changes on click', function() {
+            var slideMenuStatus;
 
+            $('.menu-icon-link').trigger('click');
+            slideMenuStatus = $('body').hasClass('menu-hidden');
+            expect(slideMenuStatus).toBeFalsy();
+
+            $('.menu-icon-link').trigger('click');
+            slideMenuStatus = $('body').hasClass('menu-hidden');
+            expect(slideMenuStatus).toBeTruthy();
+
+
+          });
+
+    });
+
+
+    /* TODO: Write a new test suite named "Initial Entries" */
+    describe('Initial Entries', function() {
         /* TODO: Write a test that ensures when the loadFeed
          * function is called and completes its work, there is at least
          * a single .entry element within the .feed container.
          * Remember, loadFeed() is asynchronous so this test will require
          * the use of Jasmine's beforeEach and asynchronous done() function.
          */
+         var feedLength;
 
-    /* TODO: Write a new test suite named "New Feed Selection"
+         beforeEach(function(done) {
+            loadFeed(0, function() {
+                done();
+            });
+         });
 
+        it('Feed Container has a least a single entry', function(done) {
+            feedEntry = $('.entry').length;
+            expect(feedLength).not.toBe(0);
+            done();
+        }) ;
+    });
+
+
+      /* TODO: Write a new test suite named "New Feed Selection" */
+        describe('News Feed Selection', function(done) {
+
+            var feedStatusChanged,
+                initialConent,
+                newContent;
         /* TODO: Write a test that ensures when a new feed is loaded
          * by the loadFeed function that the content actually changes.
          * Remember, loadFeed() is asynchronous.
          */
+
+         //load content of first feed in the list
+
+         beforeEach(function(done) {
+            loadFeed(1, function(){
+                initalContent = $('.feed').html();
+                done();
+            });
+         });
+
+         it('Content is changed when new feed is loaded', function(done) {
+
+            //load content of second feed in the list and compare to first
+            loadFeed(0, function() {
+                newContent = $('.feed').html();
+                expect(newContent).not.toEqual(initalContent);
+                done();
+            });
+         });
+        });
+
+
 }());
